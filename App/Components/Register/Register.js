@@ -45,21 +45,18 @@ class Register extends Component {
             <Divider/>
 
                 <Field
-                    style={{ color: 'black'}}
                     name="username"
                     component={TField}
                     placeholder={'Your Name'}
                 />
 
                 <Field
-                style={{ color: 'black'}}
                 name="email"
                     component={TField}
                     placeholder={'Your Email'}
                 />
                 
                 <Field
-                style={{ color: 'black'}}
                 name="password"
                     component={TField}
                     placeholder={'Your Password'}
