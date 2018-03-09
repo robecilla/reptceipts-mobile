@@ -5,11 +5,12 @@ import {
   View
 } from 'react-native';
 
-export default class SettingsScreen extends Component {
+export default class ReceiptsScreen extends Component {
+
     render() {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Settingdss!</Text>
+          <Text>Setwerwertingdss!</Text>
         </View>
       );
     }

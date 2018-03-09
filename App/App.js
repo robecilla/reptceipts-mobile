@@ -2,39 +2,28 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  StatusBar
 } from 'react-native';
 
-import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import AppNav from './Navigation/AppNav.js';
+import AuthNav from './Navigation/AuthNav.js';
 
-import Home from './Components/Home/Home';
-import Receipts from './Components/Receipts/Receipts';
+class App extends Component {
 
-export default TabNavigator({
-  Home: { screen: Home },
-  Receipts: { screen: Receipts },
-},
-{
-  navigationOptions: ({ navigation }) => ({
-    tabBarIcon: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state;
-      let iconName;
-      if (routeName === 'Home') {
-        iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-      } else if (routeName === 'Settings') {
-        iconName = `ios-options${focused ? '' : '-outline'}`;
-      }
+  componentDidMount() {
+    StatusBar.setHidden(true)
+  }
 
-      return <Ionicons name={iconName} size={25} color={tintColor} />;
-    },
-  }),
-  tabBarOptions: {
-    activeTintColor: 'tomato',
-    inactiveTintColor: 'gray',
-  },
-  tabBarComponent: TabBarBottom,
-  tabBarPosition: 'bottom',
-  animationEnabled: false,
-  swipeEnabled: false,
-});
+  render() {
+    let authenticated = false;
+
+    if(authenticated) {
+      return ( <AppNav /> )
+    }
+
+    return ( <AuthNav /> )
+  }
+}
+
+export default App;
