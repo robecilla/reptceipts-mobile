@@ -3,6 +3,9 @@ import { Alert } from 'react-native';
 import { reduxForm, Field } from 'redux-form';
 import { View, Heading, Tile, Title, Overlay, Button, Text, Divider, Subtitle } from '@shoutem/ui';
 
+import { connect } from 'react-redux';
+import * as actions from '../../Actions/Auth';
+
 import TField from '../Helpers/Field';
 
 const validate = values => {
@@ -31,7 +34,7 @@ const validate = values => {
 class Register extends Component {
 
     onSubmit = (values) => {
-        Alert.alert('', JSON.stringify(values));
+      this.props.registerUser(values);
     }
 
     render() {
@@ -73,8 +76,16 @@ class Register extends Component {
     }
 }
 
-export default reduxForm({
+function mapStateToProps(state) {
+  return {
+    
+  };
+}
+
+const RegisterForm = reduxForm({
     form: 'register',
     validate
 })(Register);
-  
+
+
+export default connect(mapStateToProps, actions)(RegisterForm);

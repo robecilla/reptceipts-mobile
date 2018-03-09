@@ -42,30 +42,34 @@ export function signinUser(values, history) {
 }
 
 /* Register */
-export function registerUser(values, history) {
+export function registerUser(values) {
   return function(dispatch) {
-    axios
-      .post(`${ROOT_URL}/api/register`, values)
-      .then(response => {
+    console.log("at action: ", values);
+    // axios
+    //   .post(`${ROOT_URL}/api/register`, values)
+    //   .then(response => {
         dispatch({
           type: AUTH_USER
         });
-        localStorage.setItem('token', response.data.token);
-        history.push('/menu/dashboard');
-      })
-      .catch(error => {
-        if (error.response) {
-          dispatch(authError(error.response.data));
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
-      });
+
+        //this.props.navigation.navigate('Details')
+
+      //   console.log(response.data.token);
+      //   AsyncStorage.setItem('token',  response.data.token);
+      // })
+      // .catch(error => {
+      //   if (error.response) {
+      //     dispatch(authError(error.response.data));
+      //   } else if (error.request) {
+      //     // The request was made but no response was received
+      //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      //     // http.ClientRequest in node.js
+      //     console.log(error.request);
+      //   } else {
+      //     // Something happened in setting up the request that triggered an Error
+      //     console.log('Error', error.message);
+      //   }
+      // });
   };
 }
 

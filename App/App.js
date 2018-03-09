@@ -6,6 +6,8 @@ import {
   StatusBar
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
 import AppNav from './Navigation/AppNav.js';
 import AuthNav from './Navigation/AuthNav.js';
 
@@ -16,7 +18,7 @@ class App extends Component {
   }
 
   render() {
-    let authenticated = false;
+    let authenticated = this.props.authenticated;
 
     if(authenticated) {
       return ( <AppNav /> )
@@ -26,4 +28,10 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    authenticated : state.auth.authenticated
+  };
+}
+
+export default connect(mapStateToProps)(App);
