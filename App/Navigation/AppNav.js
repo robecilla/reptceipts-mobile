@@ -1,23 +1,27 @@
 import React, {Component} from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/SimpleLineIcons';
 
-import Home from '../Components/Home/Home';
+import Scan from '../Components/Scan/Scan';
 import Receipts from '../Components/Receipts/Receipts';
+import Settings from '../Components/Settings/Settings';
 
 export default TabNavigator({
-  Home: { screen: Home },
+  Scan: { screen: Scan },
   Receipts: { screen: Receipts },
+  Settings: { screen: Settings },
 },
 {
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;
       let iconName;
-      if (routeName === 'Home') {
-        iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+      if (routeName === 'Scan') {
+        iconName = `energy`;
+      } else if (routeName === 'Receipts') {
+        iconName = `layers`;
       } else if (routeName === 'Settings') {
-        iconName = `ios-options${focused ? '' : '-outline'}`;
+        iconName = `settings`;
       }
 
       return <Ionicons name={iconName} size={25} color={tintColor} />;
