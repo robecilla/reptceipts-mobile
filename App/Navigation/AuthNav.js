@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/SimpleLineIcons';
+import Icons from 'react-native-vector-icons/SimpleLineIcons';
 
 import Login from '../Components/Login/Login';
 import Register from '../Components/Register/Register';
@@ -20,7 +20,7 @@ export default TabNavigator({
                 iconName = 'logout';
             }
 
-            return <Ionicons name={iconName} size={25} color={tintColor} />;
+            return <Icons name={iconName} size={25} color={tintColor} />;
         },
     }),
     tabBarOptions: {

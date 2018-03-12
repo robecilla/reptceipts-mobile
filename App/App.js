@@ -14,7 +14,7 @@ import AuthNav from './Navigation/AuthNav.js';
 class App extends Component {
 
   componentDidMount() {
-    StatusBar.setHidden(true)
+    //StatusBar.setHidden(true)
   }
 
   render() {

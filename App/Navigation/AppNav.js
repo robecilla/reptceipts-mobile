@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-import Ionicons from 'react-native-vector-icons/SimpleLineIcons';
+import Icons from 'react-native-vector-icons/SimpleLineIcons';
 
 import Scan from '../Components/Scan/Scan';
 import Receipts from '../Components/Receipts/Receipts';
@@ -24,7 +24,7 @@ export default TabNavigator({
         iconName = `settings`;
       }
 
-      return <Ionicons name={iconName} size={25} color={tintColor} />;
+      return <Icons name={iconName} size={25} color={tintColor} />;
     },
   }),
   tabBarOptions: {
