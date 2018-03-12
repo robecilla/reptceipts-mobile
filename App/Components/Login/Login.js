@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import { Alert } from 'react-native';
 import { reduxForm, Field } from 'redux-form';
 import { View, TextInput, Heading, Tile, Title, Overlay, Button, Text, Divider, Subtitle } from '@shoutem/ui';
+import Loader from '../Helpers/Loader';
+
+import { connect } from 'react-redux';
+import * as actions from '../../Actions/Auth';
+
+import { SHOW_LOADER } from '../../Actions/UI';
 
 import TField from '../Helpers/Field';
-
 
 const validate = values => {
     const errors = {};
@@ -27,14 +32,20 @@ const validate = values => {
 class Login extends Component {
 
     onSubmit = (values) => {
-        Alert.alert('', JSON.stringify(values));
+
+        this.props.dispatch({
+            type: SHOW_LOADER
+        });
+
+        this.props.signinUser(values);
     }
 
     render() {
       const { handleSubmit, submitting } = this.props;
       return (
         <View styleName="md-gutter">
-
+            <Loader
+                loading={this.props.loading ? this.props.loading : false} />
             <Heading styleName="h-center md-gutter">Welcome back,</Heading>
             <Subtitle styleName="h-center">log in to continue</Subtitle>
 
@@ -64,8 +75,15 @@ class Login extends Component {
     }
 }
 
-export default reduxForm({
+function mapStateToProps(state) {
+    return {
+      loading: state.ui.loading
+    };
+}
+  
+const LoginForm = reduxForm({
     form: 'login',
     validate
 })(Login);
   
+export default connect(mapStateToProps, actions)(LoginForm);

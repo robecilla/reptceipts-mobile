@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
 import { reduxForm, Field } from 'redux-form';
 import { View, Heading, Tile, Title, Overlay, Button, Text, Divider, Subtitle } from '@shoutem/ui';
+import Loader from '../Helpers/Loader';
 
 import { connect } from 'react-redux';
 import * as actions from '../../Actions/Auth';
 
 import TField from '../Helpers/Field';
+import { SHOW_LOADER } from '../../Actions/UI';
 
 const validate = values => {
     const errors = {};
@@ -34,6 +35,11 @@ const validate = values => {
 class Register extends Component {
 
     onSubmit = (values) => {
+
+      this.props.dispatch({
+        type: SHOW_LOADER
+      });
+
       this.props.registerUser(values);
     }
 
@@ -41,7 +47,8 @@ class Register extends Component {
       const { handleSubmit, submitting } = this.props;
       return (
         <View styleName="md-gutter">
-
+            <Loader
+              loading={this.props.loading ? this.props.loading : false} />
             <Heading styleName="h-center md-gutter">Welcome,</Heading>
             <Subtitle styleName="h-center">register to continue</Subtitle>
 
@@ -78,7 +85,7 @@ class Register extends Component {
 
 function mapStateToProps(state) {
   return {
-    
+    loading: state.ui.loading
   };
 }
 
