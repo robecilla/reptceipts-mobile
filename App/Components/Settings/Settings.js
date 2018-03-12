@@ -1,17 +1,33 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { View, Text, Button } from '@shoutem/ui';
 
-export default class SettingsScreen extends Component {
+import { connect } from 'react-redux';
+import * as actions from '../../Actions/Auth';
+
+class Settings extends Component {
+
+    onSubmit = () => {
+      this.props.signoutUser();
+    }
 
     render() {
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Settings!</Text>
+          <Button 
+            styleName="secondary"
+            onPress={() => this.onSubmit()} >
+            <Text>Sign Out</Text>
+          </Button>
         </View>
       );
     }
 }
+
+function mapStateToProps(state) {
+  return {
+    
+  };
+}
+
+
+export default connect(mapStateToProps, actions)(Settings);
