@@ -18,9 +18,8 @@ class App extends Component {
   }
 
   render() {
-    // let authenticated = this.props.authenticated;
-    let authenticated = true;
-
+    let authenticated = this.props.authenticated;
+    console.log(authenticated);
     if(authenticated) {
       return ( <AppNav /> )
     }

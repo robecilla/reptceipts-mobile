@@ -1,50 +1,91 @@
 import axios from 'axios';
 import { HIDE_LOADER } from './UI';
+import { ROOT_URL }  from './config';
+import sStorage from './Storage';
 
 export const CREATE_RECEIPT = 'CREATE_RECEIPT';
+export const GET_RECEIPT_DETAIL = 'GET_RECEIPT_DETAIL';
+export const DELETE_SUCCESS = 'DELETE_SUCCESS';
 
-const ROOT_URL = 'https://reptceipts.com';
-
-/* Login */
-export function createReceipt(values, navigate) {
-    console.log(values);
-
+export function createReceipt(values, navigate, user_id) {
   return function(dispatch) {
-    // Here values handles email and password
-    // axios
-    //   .post(`${ROOT_URL}/api/login`, values)
-    //   .then(response => {
 
+    let receipt = JSON.parse(values);
+    receipt.user = user_id;
+    for(val in receipt) {
+      if(val === 'items') {
+        receipt.items = JSON.stringify(receipt[val]);
+      }
+    }
 
-    dispatch({
-        type: HIDE_LOADER
+    sStorage.getItem('token').then((token) => {
+
+      axios.defaults.headers.common['Authorization'] =
+      'Bearer ' + token;
+
+      axios
+        .post(`${ROOT_URL}/api/receipt`, receipt)
+        .then(response => {
+            console.log(response);
+            if(response.status >= 200) {
+              
+              // dispatch({
+              //   type: HIDE_LOADER
+              // });
+
+              navigate('Receipts');
+            }
+        })
+        // If bad request, call the error handler
+        .catch(error => {
+          // Error
+          if (error.response) {
+            //dispatch(authError(error.response.data));
+            console.log(error.response);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+        });
+    });
+  };
+}
+
+export function getReceiptDetail(id) {
+  return function(dispatch) {
+    sStorage.getItem('token').then((token) => {
+      /* JWT determines the identity of the user */
+      axios.defaults.headers.common['Authorization'] =
+        'Bearer ' + token;
+      axios({
+        method: 'GET',
+        url: `${ROOT_URL}/api/receipt/` + id
+      })
+      .then(response => {
+        const receiptDetail = response.data;
+        dispatch({
+          type: GET_RECEIPT_DETAIL,
+          payload: receiptDetail
+        });
+      })
+      .catch(error => {
+        if (error.response) {
+          //dispatch(authError(error.response.data));
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
       });
-
-    navigate('Receipts');
-
-        // Save user specific JWT
-  //       localStorage.setItem('token', response.data.token);
-  //       // If request went good, dispatch redux action to change auth state
-  //       dispatch({
-  //         type: AUTH_USER
-  //       });
-  //       // Redirect user to dashboard
-  //       history.push('/menu/dashboard');
-  //     })
-  //     // If bad request, call the error handler
-  //     .catch(error => {
-  //       // Error
-  //       if (error.response) {
-  //         dispatch(authError(error.response.data));
-  //       } else if (error.request) {
-  //         // The request was made but no response was received
-  //         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-  //         // http.ClientRequest in node.js
-  //         console.log(error.request);
-  //       } else {
-  //         // Something happened in setting up the request that triggered an Error
-  //         console.log('Error', error.message);
-  //       }
-  //     });
+    });
   };
 }
