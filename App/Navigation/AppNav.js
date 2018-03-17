@@ -1,14 +1,32 @@
 import React, {Component} from 'react';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
 import Icons from 'react-native-vector-icons/SimpleLineIcons';
 
 import Scan from '../Components/Scan/Scan';
 import Receipts from '../Components/Receipts/Receipts';
 import Settings from '../Components/Settings/Settings';
+import SoloReceipt from '../Components/SoloReceipt/SoloReceipt';
+
+import Fav from '../Components/SoloReceipt/Fav';
+
+const ReceiptStack = StackNavigator({
+  Receipts: { 
+              screen: Receipts,
+              navigationOptions: {
+                title: 'Receipts'
+              },
+            },
+  SoloReceipt: { 
+                screen: SoloReceipt,
+                navigationOptions: {
+                  headerRight: <Fav />
+                }
+  }
+});
 
 export default TabNavigator({
   Scan: { screen: Scan },
-  Receipts: { screen: Receipts },
+  Receipts: { screen: ReceiptStack },
   Settings: { screen: Settings },
 },
 {
@@ -34,5 +52,5 @@ export default TabNavigator({
   tabBarComponent: TabBarBottom,
   tabBarPosition: 'bottom',
   animationEnabled: true,
-  swipeEnabled: false,
+  swipeEnabled: true,
 });

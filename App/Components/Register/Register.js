@@ -49,35 +49,35 @@ class Register extends Component {
         <View styleName="md-gutter">
             <Loader
               loading={this.props.loading ? this.props.loading : false} />
-            <Heading styleName="h-center md-gutter">Welcome,</Heading>
+            <Heading styleName="h-center md-gutter-top">Welcome,</Heading>
             <Subtitle styleName="h-center">register to continue</Subtitle>
 
             <Divider/>
 
-                <Field
-                    name="username"
-                    component={TField}
-                    placeholder={'Your Name'}
-                />
+            <Field
+                name="username"
+                component={TField}
+                placeholder={'Your Name'}
+            />
 
-                <Field
-                name="email"
-                    component={TField}
-                    placeholder={'Your Email'}
-                />
-                
-                <Field
-                name="password"
-                    component={TField}
-                    placeholder={'Your Password'}
-                    secureTextEntry={true}
-                />
+            <Field
+            name="email"
+                component={TField}
+                placeholder={'Your Email'}
+            />
+            
+            <Field
+            name="password"
+                component={TField}
+                placeholder={'Your Password'}
+                secureTextEntry={true}
+            />
 
-                <Button 
-                    styleName="secondary"
-                    onPress={handleSubmit(props => this.onSubmit(props))} >
-                    <Text>REGISTER</Text>
-                </Button>
+            <Button 
+                styleName="secondary"
+                onPress={handleSubmit(props => this.onSubmit(props))} >
+                <Text>REGISTER</Text>
+            </Button>
         </View>
       );
     }
