@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { reduxForm, Field } from 'redux-form';
-import { View, TextInput, Heading, Tile, Title, Overlay, Button, Text, Divider, Subtitle } from '@shoutem/ui';
+import { TextInput, Heading, Title, Button, Text, Divider, Subtitle } from '@shoutem/ui';
 import Loader from '../Helpers/Loader';
 
 import { connect } from 'react-redux';
-import * as actions from '../../Actions/Auth';
+import { bindActionCreators } from 'redux';
+
+import * as authActions from '../../Actions/Auth';
 
 import { SHOW_LOADER } from '../../Actions/UI';
 
@@ -37,53 +39,93 @@ class Login extends Component {
             type: SHOW_LOADER
         });
 
-        this.props.signinUser(values);
+        this.props.authActions.signinUser(values);
     }
+
+    componentWillUnmount() {
+        if (this.props.errorMessage) {
+          this.props.authActions.authError(null);
+        }
+    }
+
+    renderError() {
+        if (this.props.errorMessage) {
+          return (
+            <View style={styles.errorContainer}>
+              <Text>{this.props.errorMessage}</Text>
+            </View>
+          );
+        }
+      }
 
     render() {
       const { handleSubmit, submitting } = this.props;
       return (
-        <View styleName="md-gutter">
-            <Loader
-                loading={this.props.loading ? this.props.loading : false} />
-            <Heading styleName="h-center md-gutter">Welcome back,</Heading>
-            <Subtitle styleName="h-center">log in to continue</Subtitle>
+        <View style={styles.view}>
+            { this.renderError() }
+            <View style={styles.fieldsView}>
+                <Loader
+                    loading={this.props.loading ? this.props.loading : false} />
+                <Heading styleName="h-center">Welcome back,</Heading>
+                <Subtitle styleName="h-center">log in to continue</Subtitle>
 
-            <Divider/>
+                <Divider/>
 
-                <Field
-                    name="email"
-                    component={TField}
-                    placeholder={'Your Email'}
-                />
+                    <Field
+                        name="email"
+                        component={TField}
+                        placeholder={'Your Email'}
+                    />
 
-                <Field
-                name="password"
-                    component={TField}
-                    placeholder={'Your Password'}
-                    secureTextEntry={true}
-                />
+                    <Field
+                        name="password"
+                        component={TField}
+                        placeholder={'Your Password'}
+                        secureTextEntry={true}
+                    />
 
-                <Button 
-                    styleName="secondary"
-                    onPress={handleSubmit(props => this.onSubmit(props))} >
-                    <Text>LOG IN</Text>
-                </Button>
-
+                    <Button 
+                        styleName="secondary"
+                        onPress={handleSubmit(props => this.onSubmit(props))} >
+                        <Text>LOG IN</Text>
+                    </Button>
+            </View>
         </View>
       );
     }
 }
 
+const styles = StyleSheet.create({
+    view: {
+        flex: 1,
+    },
+    fieldsView: {
+      marginTop: 50,
+      margin: 10
+    },
+    errorContainer: {
+        alignItems: 'center',
+        marginTop: 50,
+    }
+});
+
 function mapStateToProps(state) {
     return {
-      loading: state.ui.loading
+      loading: state.ui.loading,
+      errorMessage: state.auth.error
     };
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+      authActions: bindActionCreators(authActions, dispatch),
+    };
+}
+  
   
 const LoginForm = reduxForm({
     form: 'login',
     validate
 })(Login);
   
-export default connect(mapStateToProps, actions)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
