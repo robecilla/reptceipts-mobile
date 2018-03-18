@@ -14,18 +14,15 @@ import AuthNav from './Navigation/AuthNav.js';
 class App extends Component {
 
   componentDidMount() {
-    //StatusBar.setHidden(true)
+    //StatusBar.setHidden(true);
+    StatusBar.setBackgroundColor('transparent', true);
+    StatusBar.setBarStyle('dark-content', true);
   }
 
   render() {
-    let authenticated = this.props.authenticated;
-    console.log(authenticated);
-    if(authenticated) {
-      return ( <AppNav /> )
-    }
-
-    return ( <AuthNav /> )
+    return this.props.authenticated ? <AppNav /> : <AuthNav />  
   }
+  
 }
 
 function mapStateToProps(state) {
