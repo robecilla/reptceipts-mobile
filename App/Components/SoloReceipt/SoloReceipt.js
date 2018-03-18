@@ -32,8 +32,8 @@ componentWillMount() {
 
   renderItem(item) {
     return (
-    <Row>
-        <RowView styleName="vertical stretch space-between">
+    <Row styleName="small">
+        <RowView>
             <Subtitle>{item.name}</Subtitle>
             <Caption>Price: {item.price}</Caption>
         </RowView>
@@ -72,10 +72,12 @@ componentWillMount() {
           data={items}
           renderRow={this.renderItem}
         />
+        <Divider />
         <View style={styles.view}>
             <Text>Total: {receipt.total}</Text>
             <Text>VAT({receipt.VAT_value}%): {receipt.VAT}</Text>
-            <Title styleName="md-gutter-top">Subtotal: {receipt.subtotal}</Title>
+            <Divider />
+            <Title>Subtotal: {receipt.subtotal}</Title>
         </View>
       </ScrollView>
     );
