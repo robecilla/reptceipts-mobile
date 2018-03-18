@@ -1,35 +1,34 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { reduxForm, Field } from 'redux-form';
-import { TextInput, Heading, Title, Button, Text, Divider, Subtitle } from '@shoutem/ui';
-import Loader from '../Helpers/Loader';
-
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { reduxForm, Field } from 'redux-form';
+
+import { Heading, Button, Text, Divider, Subtitle } from '@shoutem/ui';
+import Loader from '../Helpers/Loader';
+import TField from '../Helpers/Field';
+import Icons from 'react-native-vector-icons/SimpleLineIcons';
 
 import * as authActions from '../../Actions/Auth';
-
 import { SHOW_LOADER } from '../../Actions/UI';
-
-import TField from '../Helpers/Field';
 
 const validate = values => {
     const errors = {};
-  
+
     if (!values.email) {
-      errors.email = 'Required';
+        errors.email = 'Required';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+        errors.email = 'Invalid email address';
     }
-  
+
     if (!values.password) {
-      errors.password = 'Required';
+        errors.password = 'Required';
     } else if (values.password.length > 15) {
-      errors.password = 'Must be 15 characters or less';
+        errors.password = 'Must be 15 characters or less';
     }
-  
+
     return errors;
-  };
+};
 
 class Login extends Component {
 
@@ -44,32 +43,33 @@ class Login extends Component {
 
     componentWillUnmount() {
         if (this.props.errorMessage) {
-          this.props.authActions.authError(null);
+            this.props.authActions.authError(null);
         }
     }
 
     renderError() {
         if (this.props.errorMessage) {
-          return (
-            <View style={styles.errorContainer}>
-              <Text>{this.props.errorMessage}</Text>
-            </View>
-          );
+            return (
+                <View style={styles.errorContainer}>
+                    <Icons name={'close'} size={25} />
+                    <Text>{this.props.errorMessage}</Text>
+                </View>
+            );
         }
-      }
+    }
 
     render() {
-      const { handleSubmit, submitting } = this.props;
-      return (
-        <View style={styles.view}>
-            { this.renderError() }
-            <View style={styles.fieldsView}>
-                <Loader
-                    loading={this.props.loading ? this.props.loading : false} />
-                <Heading styleName="h-center">Welcome back,</Heading>
-                <Subtitle styleName="h-center">log in to continue</Subtitle>
+        const { handleSubmit, submitting } = this.props;
+        return (
+            <View style={styles.view}>
+                {this.renderError()}
+                <View style={styles.fieldsView}>
+                    <Loader
+                        loading={this.props.loading ? this.props.loading : false} />
+                    <Heading styleName="h-center">Welcome back,</Heading>
+                    <Subtitle styleName="h-center">log in to continue</Subtitle>
 
-                <Divider/>
+                    <Divider />
 
                     <Field
                         name="email"
@@ -84,14 +84,14 @@ class Login extends Component {
                         secureTextEntry={true}
                     />
 
-                    <Button 
+                    <Button
                         styleName="secondary"
                         onPress={handleSubmit(props => this.onSubmit(props))} >
                         <Text>LOG IN</Text>
                     </Button>
+                </View>
             </View>
-        </View>
-      );
+        );
     }
 }
 
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     fieldsView: {
-      marginTop: 50,
-      margin: 10
+        marginTop: 50,
+        margin: 10
     },
     errorContainer: {
         alignItems: 'center',
@@ -111,21 +111,20 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-      loading: state.ui.loading,
-      errorMessage: state.auth.error
+        loading: state.ui.loading,
+        errorMessage: state.auth.error
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-      authActions: bindActionCreators(authActions, dispatch),
+        authActions: bindActionCreators(authActions, dispatch),
     };
 }
-  
-  
+
 const LoginForm = reduxForm({
     form: 'login',
     validate
 })(Login);
-  
+
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

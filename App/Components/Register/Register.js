@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
-import { View, Heading, Tile, Title, Overlay, Button, Text, Divider, Subtitle } from '@shoutem/ui';
-import Loader from '../Helpers/Loader';
-
+import { View, StyleSheet } from 'react-native';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from '../../Actions/Auth';
+import { reduxForm, Field } from 'redux-form';
 
+import { Heading, Button, Text, Divider, Subtitle } from '@shoutem/ui';
+import Loader from '../Helpers/Loader';
 import TField from '../Helpers/Field';
+import Icons from 'react-native-vector-icons/SimpleLineIcons';
+
+import * as authActions from '../../Actions/Auth';
 import { SHOW_LOADER } from '../../Actions/UI';
 
 const validate = values => {
@@ -40,16 +43,35 @@ class Register extends Component {
         type: SHOW_LOADER
       });
 
-      this.props.registerUser(values);
+      this.props.authActions.registerUser(values);
+    }
+
+    componentWillUnmount() {
+      if (this.props.errorMessage) {
+        this.props.authActions.authError(null);
+      }
+    }
+
+    renderError() {
+        if (this.props.errorMessage) {
+          return (
+            <View style={styles.errorContainer}>
+                <Icons name={'close'} size={25} />
+                <Text>{this.props.errorMessage}</Text>
+            </View>
+          );
+        }
     }
 
     render() {
       const { handleSubmit, submitting } = this.props;
       return (
-        <View styleName="md-gutter">
+        <View style={styles.view}>
+          { this.renderError() }
+          <View style={styles.fieldsView}>
             <Loader
               loading={this.props.loading ? this.props.loading : false} />
-            <Heading styleName="h-center md-gutter-top">Welcome,</Heading>
+            <Heading styleName="h-center">Welcome,</Heading>
             <Subtitle styleName="h-center">register to continue</Subtitle>
 
             <Divider/>
@@ -78,14 +100,36 @@ class Register extends Component {
                 onPress={handleSubmit(props => this.onSubmit(props))} >
                 <Text>REGISTER</Text>
             </Button>
+            </View>
         </View>
       );
     }
 }
 
+const styles = StyleSheet.create({
+  view: {
+      flex: 1,
+  },
+  fieldsView: {
+    marginTop: 50,
+    margin: 10
+  },
+  errorContainer: {
+      alignItems: 'center',
+      marginTop: 50,
+  }
+});
+
 function mapStateToProps(state) {
   return {
-    loading: state.ui.loading
+    loading: state.ui.loading,
+    errorMessage: state.auth.error
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+      authActions: bindActionCreators(authActions, dispatch),
   };
 }
 
@@ -95,4 +139,4 @@ const RegisterForm = reduxForm({
 })(Register);
 
 
-export default connect(mapStateToProps, actions)(RegisterForm);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);

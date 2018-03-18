@@ -74,10 +74,12 @@ export function registerUser(values) {
 
       })
       .catch(error => {
-        console.log(error);
+        dispatch({
+          type: HIDE_LOADER
+        });
 
         if (error.response) {
-          //dispatch(authError(error.response.data));
+          dispatch(authError(error.response.data));
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
