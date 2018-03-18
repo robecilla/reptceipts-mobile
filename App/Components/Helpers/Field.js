@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import { View, TextInput, Text } from '@shoutem/ui';
 
 
-const TextField = ({ input, placeholder, secureTextEntry, style,  meta: { touched, error }, ...custom }) => (
+const TextField = ({ input, placeholder, defaultValue, secureTextEntry, style,  meta: { touched, error }, ...custom }) => (
     <View styleName="md-gutter-bottom rounded-corners">
         <TextInput
+            defaultValue={defaultValue}
             placeholder={placeholder}
             secureTextEntry={secureTextEntry}
             {...input}
