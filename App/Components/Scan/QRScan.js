@@ -9,8 +9,9 @@ import { Heading, Subtitle, Button, Text as ButtonText } from '@shoutem/ui';
 import Loader from '../Helpers/Loader';
 
 import { RNCamera } from 'react-native-camera';
+import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 
-import { SHOW_LOADER } from '../../Actions/UI';
+import { SHOW_LOADER, TOGGLE_CAMERA } from '../../Actions/UI';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as receiptActions from '../../Actions/Receipt';
@@ -25,29 +26,40 @@ class QRScan extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {}
+
   onBarCodeRead = (e) => {
-    this.props.navigation.goBack();
+    this.toggleCamera(false);
     Vibration.vibrate(200);
     const { navigate } = this.props.navigation;
     this.props.receiptActions.createReceipt(e.data, navigate, this.props.user.id);
   }
 
+  toggleCamera(status) {
+    this.props.dispatch({
+      type: TOGGLE_CAMERA,
+      camera : status
+    })
+  }
+
   render() {
     return (
-      <View style={styles.camContainer}>
-        <RNCamera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            onBarCodeRead={this.onBarCodeRead}
-            barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
-            style = {styles.preview}
-            type={RNCamera.Constants.Type.back}
-            flashMode={RNCamera.Constants.FlashMode.on}
-            permissionDialogTitle={'Permission to use camera'}
-            permissionDialogMessage={'We need your permission to use your camera'}
-        />
-      </View>
+      this.props.isFocused ? 
+        <View style={styles.camContainer}>
+          <RNCamera
+              ref={ref => {
+                this.camera = ref;
+              }}
+              onBarCodeRead={this.onBarCodeRead}
+              barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+              style = {styles.preview}
+              type={RNCamera.Constants.Type.back}
+              flashMode={RNCamera.Constants.FlashMode.on}
+              permissionDialogTitle={'Permission to use camera'}
+              permissionDialogMessage={'We need your permission to use your camera'}
+          />
+        </View>
+      : false
     );
   }
 }
@@ -71,16 +83,18 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    user: state.user.user
+    user: state.user.user,
+    camera: state.ui.camera
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    dispatch : dispatch,
     receiptActions: bindActionCreators(receiptActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch)
   };
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(QRScan);
+export default withNavigationFocus(connect(mapStateToProps, mapDispatchToProps)(QRScan));

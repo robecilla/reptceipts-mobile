@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { connect } from 'react-redux';
+import { updateFocus } from '@patwoz/react-navigation-is-focused-hoc';
 
 import AppNav from './Navigation/AppNav.js';
 import AuthNav from './Navigation/AuthNav.js';
@@ -14,13 +15,14 @@ import AuthNav from './Navigation/AuthNav.js';
 class App extends Component {
 
   componentDidMount() {
-    //StatusBar.setHidden(true);
     StatusBar.setBackgroundColor('transparent', true);
     StatusBar.setBarStyle('dark-content', true);
   }
 
   render() {
-    return this.props.authenticated ? <AppNav /> : <AuthNav />  
+    return this.props.authenticated ? 
+    <AppNav onNavigationStateChange={(prevState, currentState) => { updateFocus(currentState) }} /> 
+    : <AuthNav />  
   }
   
 }
