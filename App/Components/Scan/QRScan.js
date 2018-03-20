@@ -29,17 +29,9 @@ class QRScan extends Component {
   componentWillReceiveProps(nextProps) {}
 
   onBarCodeRead = (e) => {
-    this.toggleCamera(false);
     Vibration.vibrate(200);
     const { navigate } = this.props.navigation;
     this.props.receiptActions.createReceipt(e.data, navigate, this.props.user.id);
-  }
-
-  toggleCamera(status) {
-    this.props.dispatch({
-      type: TOGGLE_CAMERA,
-      camera : status
-    })
   }
 
   render() {
@@ -83,8 +75,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    user: state.user.user,
-    camera: state.ui.camera
+    user: state.user.user
   };
 }
 
