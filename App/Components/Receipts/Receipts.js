@@ -28,7 +28,6 @@ class Receipts extends Component {
   constructor(props) {
     super(props);
     this.renderRow = this.renderRow.bind(this);
-    this.props.userActions.getUserReceipts();
   }
 
   componentWillMount() {
@@ -36,7 +35,7 @@ class Receipts extends Component {
   }
 
   onPressReceipt = (receipt) => { 
-    this.props.navigation.navigate('SoloReceipt', { id: receipt.id, name: receipt.retailer_name });
+    this.props.navigation.navigate('SoloReceipt', { id: receipt.id });
   }
 
   renderRow(receipt) {
