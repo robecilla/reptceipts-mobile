@@ -8,7 +8,6 @@ export const GET_USER_RECEIPTS = 'GET_USER_RECEIPTS';
 
 export function getUser() {
   return function(dispatch) {
-    console.log('get user');
     sStorage.getItem('token').then((token) => {
         /* JWT determines the identity of the user */
         axios.defaults.headers.common['Authorization'] =

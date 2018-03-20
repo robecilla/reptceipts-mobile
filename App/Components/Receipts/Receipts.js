@@ -8,6 +8,7 @@ import {
 
 import { Heading, Subtitle, Button, Text as ButtonText, Row, Icon, ListView, Caption, View } from '@shoutem/ui';
 import Loader from '../Helpers/Loader';
+import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 
 import { SHOW_LOADER } from '../../Actions/UI';
 import { connect } from 'react-redux';
@@ -28,6 +29,12 @@ class Receipts extends Component {
   constructor(props) {
     super(props);
     this.renderRow = this.renderRow.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.isFocused && nextProps.isFocused) {
+      this.props.userActions.getUserReceipts();
+    }
   }
 
   componentWillMount() {
@@ -54,7 +61,6 @@ class Receipts extends Component {
 
   render() {
     const receipts = this.props.receipts;
-
     if (isEmpty(receipts)) {
       return (
         <View>
@@ -98,4 +104,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Receipts);
+export default withNavigationFocus(connect(mapStateToProps, mapDispatchToProps)(Receipts));

@@ -23,9 +23,10 @@ class QRScan extends Component {
   componentDidMount() {
     if (typeof this.props.user === 'undefined') {
       this.props.userActions.getUser();
-    }
+    } 
   }
 
+  /* Used to get isFocused from props */
   componentWillReceiveProps(nextProps) {}
 
   onBarCodeRead = (e) => {

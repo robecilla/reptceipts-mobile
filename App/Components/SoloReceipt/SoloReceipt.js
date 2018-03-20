@@ -24,7 +24,7 @@ function isEmpty(obj) {
 
 class SoloReceipt extends Component {
 
-componentWillMount() {
+  componentWillMount() {
     const { params } = this.props.navigation.state;
     const id = params ? params.id : null;
     this.props.receiptActions.getReceiptDetail(id);
@@ -32,11 +32,16 @@ componentWillMount() {
 
   renderItem(item) {
     return (
-    <Row styleName="small">
-        <RowView>
-            <Subtitle>{item.name}</Subtitle>
-            <Caption>Price: {item.price}</Caption>
+    <Row>
+        <Icon name="right-arrow" />
+        <RowView styleName="vertical stretch space-between">
+          <Subtitle>{item.name}</Subtitle>
+          <Caption>ID: {item.serial_no}</Caption>
         </RowView>
+        <View style={styles.price}>
+          <Subtitle>{item.price}</Subtitle>
+          <Caption>x {item.quantity}</Caption>
+        </View>
     </Row>
     );
   }
@@ -56,7 +61,7 @@ componentWillMount() {
     const items = JSON.parse(this.props.receiptDetail.receipt.items);
 
     return (
-      <ScrollView styleName="md-gutter">
+      <View styleName="md-gutter">
         <View style={styles.view}>
             <Title styleName="md-gutter-top">{retailer.name}</Title>
             <Text>{retailer.address1}, {retailer.address2}</Text>
@@ -65,21 +70,24 @@ componentWillMount() {
             <Text>{retailer.email}</Text>
             <Divider />
             <Text>When: {receipt.created_at}</Text>
-            <Text>Payment Method: {receipt.payment_method}</Text>
+            <Text>Payment: {receipt.payment_method}</Text>
         </View>
-        <Title styleName="md-gutter">Items</Title>
+        <Divider />
         <ListView
           data={items}
           renderRow={this.renderItem}
         />
         <Divider />
-        <View style={styles.view}>
-            <Text>Total: {receipt.total}</Text>
-            <Text>VAT({receipt.VAT_value}%): {receipt.VAT}</Text>
-            <Divider />
+          <View style={styles.totals}>
+            <Subtitle>Total: {receipt.total}</Subtitle>
+          </View>
+          <View style={styles.totals}>
+            <Subtitle>VAT({receipt.VAT_value}%): {receipt.VAT}</Subtitle>
+          </View>
+          <View style={styles.totals}>
             <Title>Subtotal: {receipt.subtotal}</Title>
-        </View>
-      </ScrollView>
+          </View>
+      </View>
     );
   }
 }
@@ -87,6 +95,13 @@ componentWillMount() {
 const styles = StyleSheet.create({
   view: {
     alignItems: 'center',
+  },
+  price: {
+    alignSelf: 'flex-end',
+  },
+  totals: {
+    alignSelf: 'flex-end',
+    right: 15,
   }
 });
 
@@ -104,6 +119,5 @@ function mapDispatchToProps(dispatch) {
     UIActions: bindActionCreators(UIActions, dispatch)
   };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(SoloReceipt);
