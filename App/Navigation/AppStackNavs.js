@@ -8,6 +8,7 @@ import Profile from '../Components/Profile/Profile';
 import SoloReceipt from '../Components/SoloReceipt/SoloReceipt';
 
 import Fav from '../Components/SoloReceipt/Fav';
+import Search from '../Components/Receipts/Search';
 import QRButtonHeader from '../Components/Scan/QRButtonHeader';
 import NFCButtonHeader from '../Components/Scan/NFCButtonHeader';
 
@@ -41,7 +42,8 @@ export const ReceiptStack = StackNavigator({
     Receipts: {
         screen: Receipts,
         navigationOptions: {
-            headerTitle: 'Receipts'
+            headerTitle: 'Receipts',
+            headerRight: <Search />
         },
     },
     SoloReceipt: {

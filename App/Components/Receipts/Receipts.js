@@ -9,6 +9,7 @@ import {
 import { Heading, Subtitle, Button, Text as ButtonText, Row, Icon, ListView, Caption, View } from '@shoutem/ui';
 import Loader from '../Helpers/Loader';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
+import SearchInput, { createFilter } from 'react-native-search-filter';
 
 import { SHOW_LOADER } from '../../Actions/UI';
 import { connect } from 'react-redux';
@@ -24,11 +25,22 @@ function isEmpty(obj) {
   return true;
 }
 
+const KEYS_TO_FILTERS = ['retailer_name', 'subtotal'];
+
 class Receipts extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      searchTerm: ''
+    };
     this.renderRow = this.renderRow.bind(this);
+    this.searchUpdated = this.searchUpdated.bind(this);
+
+  }
+
+  searchUpdated(term) {
+    this.setState({ searchTerm: term });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,14 +81,35 @@ class Receipts extends Component {
       )
     }
 
+    let filteredReceipts = [];
+    if (receipts) {
+      filteredReceipts = receipts.filter(
+        createFilter(this.state.searchTerm, KEYS_TO_FILTERS)
+      );
+	}
+	
     return (
       <View>
       <Loader
           loading={this.props.loading ? this.props.loading : false} />
-        <ListView
-          data={receipts}
-          renderRow={this.renderRow}
-        />
+
+		{ this.props.displaySearch ? 
+			<SearchInput 
+				onChangeText={(term) => { this.searchUpdated(term) }}
+				style={styles.searchInput}
+				placeholder="Search receipts"
+			/>
+		:
+			false
+		}
+        {!isEmpty(filteredReceipts) ? (
+          <ListView
+            data={filteredReceipts}
+            renderRow={this.renderRow}
+          />
+        ) : (
+          <Subtitle styleName="md-gutter">Could not find that receipt!</Subtitle>
+        )}
       </View>
     );
   }
@@ -85,13 +118,19 @@ class Receipts extends Component {
 const styles = StyleSheet.create({
   view: {
     flex: 1
+  },
+  searchInput:{
+    padding: 10,
+    borderColor: '#CCC',
+    borderWidth: 1
   }
 });
 
 function mapStateToProps(state) {
   return {
     loading: state.ui.loading,
-    receipts: state.user.receipts
+	receipts: state.user.receipts,
+	displaySearch: state.ui.displaySearch
   };
 }
 
