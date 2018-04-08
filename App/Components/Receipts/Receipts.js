@@ -7,11 +7,12 @@ import {
 } from 'react-native';
 
 import { Heading, Subtitle, Button, Text as ButtonText, Row, Icon, ListView, Caption, View } from '@shoutem/ui';
+import Moment from 'react-moment';
+
 import Loader from '../Helpers/Loader';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 import SearchInput, { createFilter } from 'react-native-search-filter';
 
-import { SHOW_LOADER } from '../../Actions/UI';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as receiptActions from '../../Actions/Receipt';
@@ -63,7 +64,7 @@ class Receipts extends Component {
         <Row>
           <View styleName="vertical stretch space-between">
             <Subtitle>{receipt.retailer_name}</Subtitle>
-            <Caption>Subtotal: {receipt.subtotal}</Caption>
+            <Caption>Subtotal: {receipt.subtotal} &#183; <Moment element={Caption} format="DD MMMM YYYY">{receipt.created_at}</Moment></Caption>
           </View>
           <Icon styleName="disclosure" name="right-arrow" />
         </Row>
@@ -72,7 +73,13 @@ class Receipts extends Component {
   }
 
   render() {
+    
+    if (typeof this.props.receipts === 'undefined') {
+      return false;
+    }
+
     const receipts = this.props.receipts;
+
     if (isEmpty(receipts)) {
       return (
         <View>
@@ -129,8 +136,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     loading: state.ui.loading,
-	receipts: state.user.receipts,
-	displaySearch: state.ui.displaySearch
+    receipts: state.user.receipts,
+    displaySearch: state.ui.displaySearch
   };
 }
 
