@@ -5,6 +5,7 @@ import {
   View,
   StatusBar
 } from 'react-native';
+import styles from './styles';
 
 import { connect } from 'react-redux';
 import { updateFocus } from '@patwoz/react-navigation-is-focused-hoc';
@@ -15,8 +16,8 @@ import AuthNav from './Navigation/AuthNav.js';
 class App extends Component {
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('transparent', true);
-    StatusBar.setBarStyle('dark-content', true);
+    StatusBar.setBackgroundColor(styles.headerColor, true);
+    StatusBar.setBarStyle('white-content', true);
   }
 
   render() {
