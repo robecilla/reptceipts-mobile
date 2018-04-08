@@ -16,13 +16,11 @@ const validate = values => {
     const errors = {};
 
     if (!values.email) {
-        errors.email = 'Required';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = 'Invalid email address';
     }
 
     if (!values.password) {
-        errors.password = 'Required';
     } else if (values.password.length > 15) {
         errors.password = 'Must be 15 characters or less';
     }
@@ -30,61 +28,37 @@ const validate = values => {
     return errors;
 };
 
-class ProfileSettings extends Component {
+class Edit extends Component {
 
     onSubmit = (values) => {
-
-        this.props.dispatch({
-            type: SHOW_LOADER
-        });
-
         this.props.authActions.signinUser(values);
     }
 
-    componentWillUnmount() {
-        if (this.props.errorMessage) {
-            this.props.authActions.authError(null);
-        }
-    }
-
-    renderError() {
-        if (this.props.errorMessage) {
-            return (
-                <View style={styles.errorContainer}>
-                    <Icons name={'close'} size={25} />
-                    <Text>{this.props.errorMessage}</Text>
-                </View>
-            );
-        }
-    }
-
     render() {
-        const { handleSubmit, submitting } = this.props;
+        const { handleSubmit, submitting, user } = this.props;
         return (
-            <View>
+            <View style={styles.fieldsView}>
                 <Field
                     name="username"
                     component={TField}
                     placeholder={'Update user name'}
+                    value={user.username}
                 />
 
                 <Field
                     name="email"
                     component={TField}
                     placeholder={'Update email'}
+                    keyboardType="email-address"
+                    value={user.email}
                 />
 
                 <Field
                     name="password"
                     component={TField}
-                    placeholder={'Password'}
+                    placeholder={'Update Password'}
                     secureTextEntry={true}
                 />
-                <Button 
-                    styleName="secondary"
-                    onPress={() => console.log('Update Details')} >
-                    <Text>UPDATE DETAILS</Text>
-                </Button>
             </View>
         );
     }
@@ -95,19 +69,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     fieldsView: {
-        marginTop: 50,
         margin: 10
-    },
-    errorContainer: {
-        alignItems: 'center',
-        marginTop: 50,
     }
 });
 
 function mapStateToProps(state) {
     return {
         loading: state.ui.loading,
-        errorMessage: state.auth.error
+        errorMessage: state.auth.error,
+        user: state.user.user
     };
 }
 
@@ -117,9 +87,9 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-const ProfileSettingsForm = reduxForm({
-    form: 'login',
+const EditForm = reduxForm({
+    form: 'edit',
     validate
-})(ProfileSettings);
+})(Edit);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettingsForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EditForm);
