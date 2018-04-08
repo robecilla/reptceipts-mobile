@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
+import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
 import Icons from 'react-native-vector-icons/SimpleLineIcons';
+import styles from '../styles';
 
 import Login from '../Components/Login/Login';
 import Register from '../Components/Register/Register';
 
-export default TabNavigator({
+const Auth = TabNavigator({
     Login: { screen: Login },
     Register: { screen: Register },
 },
@@ -24,11 +25,25 @@ export default TabNavigator({
         },
     }),
     tabBarOptions: {
-        activeTintColor: 'tomato',
+        activeTintColor: styles.headerColor,
         inactiveTintColor: 'gray',
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
     animationEnabled: true,
     swipeEnabled: true,
+    lazyLoad: true,
 });
+
+export default StackNavigator({
+    Auth: { 
+        screen: Auth,
+        navigationOptions: {
+            title: 'reptceipts',
+            headerStyle: {
+                backgroundColor: styles.headerColor
+            },
+            headerTintColor: '#fff'
+        },
+    }
+  });

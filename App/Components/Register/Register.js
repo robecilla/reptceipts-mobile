@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
@@ -7,29 +7,29 @@ import { reduxForm, Field } from 'redux-form';
 import { Heading, Button, Text, Divider, Subtitle } from '@shoutem/ui';
 import Loader from '../Helpers/Loader';
 import TField from '../Helpers/Field';
-import Icons from 'react-native-vector-icons/SimpleLineIcons';
 
 import * as authActions from '../../Actions/Auth';
-import { SHOW_LOADER } from '../../Actions/UI';
 
 const validate = values => {
     const errors = {};
   
     if (!values.username) {
-      errors.username = 'Please choose an username';
-    } else if (values.username.length > 15) {
-      errors.username = 'Must be 15 characters or less';
+      errors.username = 'Please enter an username';
+    } else if (values.username.length > 20) {
+      errors.username = 'Max. 20 characters';
     }
     if (!values.email) {
-      errors.email = 'We need your e-mail!';
+      errors.email = 'Please enter an email address';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+      errors.email = 'Please enter a valid email address';
     }
   
     if (!values.password) {
       errors.password = 'Please create a password';
+    } else if (values.password.length < 8) {
+      errors.password = 'Needs to be a minimun of eight characters';
     } else if (values.password.length > 15) {
-      errors.password = 'Must be 15 characters or less';
+      errors.password = 'Needs to be a maximum of fifteen characters';
     }
   
     return errors;
@@ -38,65 +38,64 @@ const validate = values => {
 class Register extends Component {
 
     onSubmit = (values) => {
-
-      this.props.dispatch({
-        type: SHOW_LOADER
-      });
-
       this.props.authActions.registerUser(values);
     }
 
-    componentWillUnmount() {
-      if (this.props.errorMessage) {
-        this.props.authActions.authError(null);
-      }
-    }
-
-    renderError() {
-        if (this.props.errorMessage) {
-          return (
-            <View style={styles.errorContainer}>
-                <Icons name={'close'} size={25} />
-                <Text>{this.props.errorMessage}</Text>
-            </View>
-          );
-        }
+    registerError() {
+      this.props.registerError ? 
+          Alert.alert(
+              'Sorry!',
+              //'An error occurred trying create your account, please try again later!',
+              this.props.registerError,
+              [
+                  {text: 'OK', onPress: () => this.props.dispatch({type: 'REGISTER_ERROR' , payload: false })}
+              ],
+              { cancelable: false }
+          )
+      : false ;
     }
 
     render() {
       const { handleSubmit, submitting } = this.props;
       return (
         <View style={styles.view}>
-          { this.renderError() }
           <View style={styles.fieldsView}>
-            <Loader
-              loading={this.props.loading ? this.props.loading : false} />
-            <Heading styleName="h-center">Welcome,</Heading>
-            <Subtitle styleName="h-center">register to continue</Subtitle>
 
+            <Loader loading={this.props.loading ? this.props.loading : false} />
+
+            { this.registerError() }
+
+            <View>
+              <Heading styleName="h-center">Welcome,</Heading>
+              <Subtitle styleName="h-center">register to continue</Subtitle>
+            </View>
+            
             <Divider/>
 
             <Field
                 name="username"
                 component={TField}
-                placeholder={'Your Name'}
+                placeholder={'Username'}
+                characterRestriction={20}
             />
 
             <Field
-            name="email"
+                name="email"
                 component={TField}
-                placeholder={'Your Email'}
+                placeholder={'Email Address'}
+                keyboardType="email-address"
             />
             
             <Field
-            name="password"
+                name="password"
                 component={TField}
-                placeholder={'Your Password'}
+                placeholder={'Password'}
                 secureTextEntry={true}
+                title={"Choose wisely"}
+                characterRestriction={15}
             />
-
             <Button 
-                styleName="secondary"
+                styleName="secondary xl-gutter-top"
                 onPress={handleSubmit(props => this.onSubmit(props))} >
                 <Text>REGISTER</Text>
             </Button>
@@ -111,19 +110,15 @@ const styles = StyleSheet.create({
       flex: 1,
   },
   fieldsView: {
-    marginTop: 50,
+    marginTop: 25,
     margin: 10
-  },
-  errorContainer: {
-      alignItems: 'center',
-      marginTop: 50,
   }
 });
 
 function mapStateToProps(state) {
   return {
     loading: state.ui.loading,
-    errorMessage: state.auth.error
+    registerError: state.auth.registerError
   };
 }
 
@@ -137,6 +132,5 @@ const RegisterForm = reduxForm({
     form: 'register',
     validate
 })(Register);
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
