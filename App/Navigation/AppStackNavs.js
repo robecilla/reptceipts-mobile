@@ -1,65 +1,69 @@
 import React, {Component} from 'react';
 import { StackNavigator } from 'react-navigation';
+import styles from '../styles';
 
-import QRScan from '../Components/Scan/QRScan';
-import NFCScan from '../Components/Scan/NFCScan';
 import Receipts from '../Components/Receipts/Receipts';
 import Profile from '../Components/Profile/Profile';
 import SoloReceipt from '../Components/SoloReceipt/SoloReceipt';
+import Edit from '../Components/Profile/Edit';
+import SaveEdit from '../Components/Profile/SaveEdit';
 
-import Fav from '../Components/SoloReceipt/Fav';
+import Pencil from '../Components/Profile/Pencil';
+import Delete from '../Components/SoloReceipt/Delete';
 import Search from '../Components/Receipts/Search';
-import QRButtonHeader from '../Components/Scan/QRButtonHeader';
-import NFCButtonHeader from '../Components/Scan/NFCButtonHeader';
-
-const defaultScan = 'qr';
-
-export const ScanStack = StackNavigator({
-    QRScan: {
-        screen: QRScan,
-        navigationOptions: ({ navigation }) => {
-            return {
-                headerTitle: 'QR',
-                headerRight: <NFCButtonHeader navigation={navigation} />
-            }
-        },
-    },
-    NFCScan: {
-        screen: NFCScan,
-        navigationOptions: ({ navigation }) => {
-            return {
-                headerTitle: 'NFC',
-                headerRight: <QRButtonHeader navigation={navigation} />
-            }
-        },
-    },
-},
-{
-    initialRouteName: defaultScan == 'qr' ? 'QRScan' : 'NFCScan'
-});
 
 export const ReceiptStack = StackNavigator({
     Receipts: {
         screen: Receipts,
         navigationOptions: {
             headerTitle: 'Receipts',
-            headerRight: <Search />
+            headerRight: <Search />,
+            headerStyle: {
+                backgroundColor: styles.headerColor
+            },
+            headerTintColor: '#fff'
         },
     },
     SoloReceipt: {
         screen: SoloReceipt,
-        navigationOptions: {
-            headerRight: <Fav />
-        }
+        navigationOptions: ({ navigation }) => {
+            const { params } = navigation.state;
+            return {
+                headerRight: <Delete receipt_id={params.id} navigate={navigation.navigate}/>,
+                headerStyle: {
+                    backgroundColor: styles.headerColor
+                },
+                headerTintColor: '#fff'
+            }
+        },
     }
 });
-
 
 export const ProfileStack = StackNavigator({
     Profile: {
         screen: Profile,
-        navigationOptions: {
-            headerTitle: 'Profile'
-        },
+        navigationOptions: ({ navigation }) => {
+            return {
+                headerTitle: 'Profile',
+                headerRight: <Pencil navigation={navigation} />,
+                headerStyle: {
+                    backgroundColor: styles.headerColor
+                },
+                headerTintColor: '#fff'
+            }
+        }
+    },
+    Edit: {
+        screen: Edit,
+        navigationOptions: ({ navigation }) => {
+            return {
+                headerTitle: 'Edit Profile',
+                headerRight: <SaveEdit navigate={navigation.navigate} />,
+                headerStyle: {
+                    backgroundColor: styles.headerColor
+                },
+                headerTintColor: '#fff'
+            }
+        }
     }
 });

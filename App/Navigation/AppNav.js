@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Icons from 'react-native-vector-icons/SimpleLineIcons';
-
-import { ScanStack, ReceiptStack, ProfileStack } from './AppStackNavs';
+import styles from '../styles';
+import { ReceiptStack, ProfileStack } from './AppStackNavs';
+import ConnectedScanStack from './ConnectedScanStack';
 
 export default TabNavigator({
   Receipts: { screen: ReceiptStack },
-  Scan: { screen: ScanStack },
+  Scan: { screen: ConnectedScanStack },
   Profile: { screen: ProfileStack },
 },
 {
@@ -25,11 +26,12 @@ export default TabNavigator({
     },
   }),
   tabBarOptions: {
-    activeTintColor: 'tomato',
+    activeTintColor: styles.headerColor,
     inactiveTintColor: 'gray',
   },
   tabBarComponent: TabBarBottom,
   tabBarPosition: 'bottom',
   animationEnabled: true,
   swipeEnabled: true,
+  lazyLoad: true,
 });
