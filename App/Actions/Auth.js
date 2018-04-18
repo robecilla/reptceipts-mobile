@@ -1,12 +1,12 @@
-import axios from 'axios';
-import { SHOW_LOADER, HIDE_LOADER } from './UI';
-import { ROOT_URL } from './config';
-import sStorage from './Storage';
+import axios from "axios";
+import { SHOW_LOADER, HIDE_LOADER } from "./UI";
+import { ROOT_URL } from "./config";
+import sStorage from "./Storage";
 
-export const AUTH_USER = 'AUTH_USER';
-export const UNAUTH_USER = 'UNAUTH_USER';
-export const REGISTER_ERROR = 'REGISTER_ERROR';
-export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const AUTH_USER = "AUTH_USER";
+export const UNAUTH_USER = "UNAUTH_USER";
+export const REGISTER_ERROR = "REGISTER_ERROR";
+export const LOGIN_ERROR = "LOGIN_ERROR";
 
 /* Login */
 export function signinUser(values) {
@@ -18,15 +18,13 @@ export function signinUser(values) {
     axios
       .post(`${ROOT_URL}/api/login`, values)
       .then(response => {
-        console.log(response);
         // Save user specific JWT
-        sStorage.setItem('token', response.data.response.token);
+        sStorage.setItem("token", response.data.response.token);
 
         // If request went good, dispatch redux action to change auth state
         dispatch({
           type: AUTH_USER
         });
-        
       })
       // If bad request, call the error handler
       .catch(error => {
@@ -35,7 +33,8 @@ export function signinUser(values) {
           type: LOGIN_ERROR,
           payload: error.response.data.response
         });
-      }).then(() => {
+      })
+      .then(() => {
         // Hide loader on request completion
         dispatch({
           type: HIDE_LOADER
@@ -53,20 +52,19 @@ export function registerUser(values) {
     axios
       .post(`${ROOT_URL}/api/register`, values)
       .then(response => {
-
-        sStorage.setItem('token', response.data.response.token);
+        sStorage.setItem("token", response.data.response.token);
 
         dispatch({
           type: AUTH_USER
         });
-  
-      }).catch(error => {
-        
+      })
+      .catch(error => {
         dispatch({
           type: REGISTER_ERROR,
           payload: error.response.data.response
         });
-      }).then(() => {
+      })
+      .then(() => {
         // Hide loader on request completion
         dispatch({
           type: HIDE_LOADER
@@ -76,7 +74,7 @@ export function registerUser(values) {
 }
 
 export function signoutUser() {
-  sStorage.removeItem('token');
+  sStorage.removeItem("token");
   return {
     type: UNAUTH_USER
   };

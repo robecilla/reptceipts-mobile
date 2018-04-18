@@ -1,14 +1,14 @@
 import { createStore, applyMiddleware } from "redux";
 
 import thunk from "redux-thunk";
-import getAppReducer from "./Reducers";
+import rootReducer from "./Reducers";
 
 export default function getStore(navReducer) {
-    const store = createStore(
-        getAppReducer(navReducer),
-        undefined,
-        applyMiddleware(thunk)
-    );
+  const store = createStore(
+    rootReducer(navReducer),
+    undefined,
+    applyMiddleware(thunk)
+  );
 
-    return store;
+  return store;
 }

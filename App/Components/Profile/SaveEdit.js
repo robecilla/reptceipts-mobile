@@ -17,7 +17,7 @@ class SaveEdit extends Component {
     handleTouch() {
         let { values } = this.props.form;
         values.id = this.props.user_id;
-        this.props.userActions.updateUser(values, this.props.navigate);
+        this.props.userActions.updateUser(values, this.props.navigation);
     }
     
     updateError() {
