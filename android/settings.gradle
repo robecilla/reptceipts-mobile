@@ -1,4 +1,8 @@
 rootProject.name = 'ReptceiptsMobile'
+include ':react-native-nfc'
+project(':react-native-nfc').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-nfc/android')
+include ':react-native-nfc-manager'
+project(':react-native-nfc-manager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-nfc-manager/android')
 include ':react-native-camera'
 project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
 
