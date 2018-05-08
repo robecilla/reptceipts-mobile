@@ -3,9 +3,8 @@ package com.reptceiptsmobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.novadart.reactnativenfc.ReactNativeNFCPackage;
+import com.ekreutz.barcodescanner.BarcodeScannerPackage;
 import community.revteltech.nfc.NfcManagerPackage;
-import org.reactnative.camera.RNCameraPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnative.photoview.PhotoViewPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -29,9 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativeNFCPackage(),
+            new BarcodeScannerPackage(),
             new NfcManagerPackage(),
-            new RNCameraPackage(),
             new VectorIconsPackage(),
             new PhotoViewPackage(),
             new LinearGradientPackage()

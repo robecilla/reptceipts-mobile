@@ -1,10 +1,8 @@
 rootProject.name = 'ReptceiptsMobile'
-include ':react-native-nfc'
-project(':react-native-nfc').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-nfc/android')
+include ':react-native-barcode-scanner-google'
+project(':react-native-barcode-scanner-google').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-barcode-scanner-google/android')
 include ':react-native-nfc-manager'
 project(':react-native-nfc-manager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-nfc-manager/android')
-include ':react-native-camera'
-project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
 
 include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
