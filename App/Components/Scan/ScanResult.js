@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Vibration, Alert } from "react-native";
 import { Heading, Subtitle, Button, Text as ButtonText } from "@shoutem/ui";
 import Loader from "../Helpers/Loader";
 
-import { RNCamera } from "react-native-camera";
 import { withNavigationFocus } from "@patwoz/react-navigation-is-focused-hoc";
 
 import { SHOW_LOADER, TOGGLE_CAMERA } from "../../Actions/UI";
@@ -22,7 +21,7 @@ class ScanResult extends Component {
         {params.success
           ? Alert.alert(
               "Great!",
-              "Receipt scanned successfully! Swipe left",
+              "Receipt scanned successfully!",
               [
                 {
                   text: "OK",

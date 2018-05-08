@@ -48,6 +48,12 @@ class NFCScan extends Component {
       : false;
   }
 
+  componentWillUnmount() {
+    if (this._stateChangedSubscription) {
+      this._stateChangedSubscription.remove();
+    }
+  }
+
   startNfc() {
     NfcManager.start({
       onSessionClosedIOS: () => {}
@@ -59,6 +65,34 @@ class NFCScan extends Component {
       .catch(error => {
         console.warn("start fail", error);
         this.setState({ supported: false });
+      });
+
+    NfcManager.isEnabled()
+      .then(enabled => {
+        this.setState({ enabled });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    NfcManager.onStateChanged(event => {
+      if (event.state === "on") {
+        this.setState({ enabled: true });
+      } else if (event.state === "off") {
+        this.setState({ enabled: false });
+      } else if (event.state === "turning_on") {
+        // do whatever you want
+      } else if (event.state === "turning_off") {
+        // do whatever you want
+      }
+    })
+      .then(sub => {
+        this._stateChangedSubscription = sub;
+        // remember to call this._stateChangedSubscription.remove()
+        // when you don't want to listen to this anymore
+      })
+      .catch(err => {
+        console.warn(err);
       });
   }
 
@@ -73,33 +107,16 @@ class NFCScan extends Component {
   };
 
   onTagDiscovered = tag => {
-    console.log("Tag Discovered", tag);
     /* Parse tag information */
-    let url = this.parseUri(tag);
+    let receipt = this.parseText(tag);
+    console.log(receipt);
     /* If parsed successfully, get url content which is the receipt data in JSON format and create receipt */
-    if (url) {
+    if (receipt) {
       const { receiptActions } = this.props;
       const user_id = this.props.user.id;
 
-      sStorage.getItem("token").then(token => {
-        axios
-          .get(url, {
-            headers: new Headers({
-              Authorization: "Bearer" + token
-            })
-          })
-          .then(response => {
-            let receipt = response.data.response;
-            Vibration.vibrate(200);
-            receiptActions.createReceipt(
-              receipt,
-              this.props.navigation,
-              user_id,
-              2
-            );
-          })
-          .catch(error => console.error("Error:", error));
-      });
+      Vibration.vibrate(200);
+      receiptActions.createReceipt(receipt, this.props.navigation, user_id, 2);
     }
   };
 
@@ -128,17 +145,34 @@ class NFCScan extends Component {
     });
   }
 
-  parseUri = tag => {
+  // parseUri = tag => {
+  //   if (tag.ndefMessage) {
+  //     let result = NdefParser.parseUri(tag.ndefMessage[0]),
+  //       uri = result && result.uri;
+  //     if (uri) {
+  //       console.log("parseUri: " + uri);
+  //       return uri;
+  //     }
+  //   }
+  //   return null;
+  // };
+
+  parseText = tag => {
     if (tag.ndefMessage) {
-      let result = NdefParser.parseUri(tag.ndefMessage[0]),
-        uri = result && result.uri;
-      if (uri) {
-        console.log("parseUri: " + uri);
-        return uri;
-      }
+      return NdefParser.parseText(tag.ndefMessage[0]);
     }
     return null;
   };
+
+  goToNFCSetting() {
+    NfcManager.goToNfcSetting()
+      .then(result => {
+        console.log("goToNfcSetting OK", result);
+      })
+      .catch(error => {
+        console.warn("goToNfcSetting fail", error);
+      });
+  }
 
   render() {
     return (
@@ -162,11 +196,25 @@ class NFCScan extends Component {
             { cancelable: false }
           )
         ) : this.state.supported ? (
-          <View style={styles.view}>
-            <Subtitle styleName="md-gutter">
-              Hover over the device to get the receipt
-            </Subtitle>
-          </View>
+          this.state.enabled ? (
+            <View style={styles.view}>
+              <Subtitle styleName="md-gutter">
+                Hover over the device to get the receipt
+              </Subtitle>
+            </View>
+          ) : (
+            <View style={styles.view}>
+              <Subtitle styleName="md-gutter">
+                Seems like you need to enable NFC in your phone
+              </Subtitle>
+              <Button
+                onPress={this.goToNFCSetting}
+                styleName="secondary xl-gutter-top"
+              >
+                <Text>ENABLE IT</Text>
+              </Button>
+            </View>
+          )
         ) : (
           <View style={styles.view}>
             <Subtitle styleName="xl-gutter">

@@ -1,16 +1,31 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Vibration, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Vibration,
+  Alert,
+  Dimensions
+} from "react-native";
 import { Heading, Subtitle, Button, Text as ButtonText } from "@shoutem/ui";
 import Loader from "../Helpers/Loader";
 
-import { RNCamera } from "react-native-camera";
-
+import BarcodeScanner, {
+  Exception,
+  FocusMode,
+  CameraFillMode,
+  BarcodeType,
+  pauseScanner,
+  resumeScanner
+} from "react-native-barcode-scanner-google";
 import { SCAN_SUCCESS } from "../../Actions/Receipt";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as receiptActions from "../../Actions/Receipt";
 import * as userActions from "../../Actions/User";
 import * as UIActions from "../../Actions/UI";
+
+const { width, height } = Dimensions.get("window");
 
 class QRScan extends Component {
   constructor(props) {
@@ -67,18 +82,11 @@ class QRScan extends Component {
             { cancelable: false }
           )
         ) : (
-          <RNCamera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            onBarCodeRead={this.state.onBarCodeRead}
-            barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+          <BarcodeScanner
             style={styles.preview}
-            type={RNCamera.Constants.Type.back}
-            permissionDialogTitle={"Permission to use camera"}
-            permissionDialogMessage={
-              "We need your permission to use your camera"
-            }
+            onBarcodeRead={this.onBarCodeRead}
+            focusMode={FocusMode.AUTO}
+            barcodeType={BarcodeType.QR_CODE}
           />
         )}
       </View>
@@ -95,11 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center"
-  },
-  ting: {
-    flex: 1,
-    alignItems: "center",
-    width: 100
   }
 });
 
